@@ -5,5 +5,5 @@
 	$database = new database;
 	$provider = new sql4me();
 	$auth = new auth4me($provider);
-	echo $auth->signup("the_username","the_user_password","the_user_email_is_optional_you_can_delete_this_argument_if_you_want")[1];
+	echo $auth->password("the_user_id","the_user_password")[1];
 ?>

@@ -5,5 +5,5 @@
 	$database = new database;
 	$provider = new sql4me();
 	$auth = new auth4me($provider);
-	echo $auth->signin("user","password")[1];
+	echo $auth->signin("the_username_or_email","the_user_password")[1];
 ?>

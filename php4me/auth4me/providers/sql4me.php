@@ -48,8 +48,11 @@
 		}
 		
 		function password($id, $password){
+			return $this->insert("UPDATE `" . $this->field->table . "` SET `" . $this->field->password . "` = ? WHERE `" . $this->field->id . "` = ?;", "si", password_hash($password, PASSWORD_BCRYPT, ['cost' => $this->bcrypt]), $id)[0] ? [true, "Password was set sucessfully!"] : [false, "There was an error trying to set the password."];
 		}
+		
 		function email($id, $email){
+			return $this->insert("UPDATE `" . $this->field->table . "` SET `" . $this->field->email . "` = ? WHERE `" . $this->field->id . "` = ?;", "si", $email, $id)[0] ? [true, "E-mail was set sucessfully!"] : [false, "There was an error trying to set the e-mail."];
 		}
 		
 		private function select($query, $type, ...$bind){
