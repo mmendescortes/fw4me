@@ -2,28 +2,46 @@ const mysql = require("mysql");
 module.exports = class sql4me {
     constructor(hostname = "localhost", username = "root", password = "", init = true) {
         // CONNECT
-        this.database = mysql.createConnection({
-            host: hostname,
-            user: username,
-            password: password
-        });
+        try {
+            this.database = mysql.createConnection({
+                host: hostname,
+                user: username,
+                password: password
+            });
+        } catch(err) {
+            console.err("Couldn't create connection.");
+            require("process").exit();
+        }
         this.database.connect((err) => {
-            err ? console.error([false, "Error establishing a database connection."]) : console.debug([true, "Connection established successfully!"]);
+            if(err) {
+                console.error("Couldn't create connection.");
+                require("process").exit();
+            }
         });
     }
 
     select(query, bind) {
         return new Promise((res) => {
             this.database.query(query, bind, function(err, fields) {
-                fields.length ? res([true, fields]) : res([false, "No results for your query."]);
+                if(err) {
+                    console.error("Couldn't complete select query.");
+                    require("process").exit();
+                } else {
+                    fields.length ? res([true, fields]) : res([false, "No results for your query."]);
+                }
             });
         });
     }
 
     insert(query, bind) {
         return new Promise((res) => {
-            this.database.query(query, bind, function(err) {
-                !err ? res([true, "Success!"]) : res([false, "Fail!"]);
+            this.database.query(query, bind, function(err, fields) {
+                if(err) {
+                    console.error("Couldn't complete operation.");
+                    require("process").exit();
+                } else {
+                    res(fields.affectedRows >= 1);
+                }
             })
         });
     }
@@ -41,7 +59,10 @@ module.exports = class sql4me {
     }
     select_db(field_database) {
         this.database.changeUser({database: field_database}, function(err) {
-            !err ? console.debug([true, "Database changed successfully!"]) : console.error([false, "Fail on changing database!"]);
+            if(err) {
+                console.error("Fail on changing database!");
+                require("process").exit();
+            }
         });
     }
 }
