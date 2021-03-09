@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 module.exports = class sql4me {
-    constructor(hostname = "localhost", username = "root", password = "", init = true) {
+    constructor(hostname = "localhost", username = "root", password = "") {
         // CONNECT
         try {
             this.database = mysql.createConnection({
