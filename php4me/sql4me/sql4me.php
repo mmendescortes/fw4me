@@ -1,7 +1,7 @@
 <?php
 	class sql4me {
 		public $status;
-		function __construct($hostname="localhost", $username="root", $password="", $init=true) {
+		function __construct($hostname="localhost", $username="root", $password="") {
 			// CONNECT
 			$this->database = new mysqli($hostname, $username, $password);
 			$this->connection = $this->database->connect_error ? [false, "Error establishing a database connection."] : [true, "Connection established successfully!"];
