@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt")
-module.exports = class sql4me {
+module.exports = class sql4auth {
     constructor(engine, init = true) {
         // PRIVATE
         this.field = {};
