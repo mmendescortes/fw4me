@@ -39,7 +39,7 @@
 		
 		function signup($username, $password, $email){
 			// TODO: Make the function duration the same for both entries
-			if(!$this->database->select("SELECT " . $this->field->id . " FROM " . $this->field->table . " WHERE " . $this->field->username . " = ? OR " . $this->field->email . " = ?;", "ss", $username, $username)[0]){
+			if(!$this->database->select("SELECT " . $this->field->id . " FROM " . $this->field->table . " WHERE " . $this->field->username . " = ? OR " . $this->field->email . " = ?;", "ss", $username, $email)[0]){
 				return [$this->database->insert("INSERT INTO " . $this->field->table . " (" . $this->field->username . ", " . $this->field->email . ", " . $this->field->password . ") VALUES (?, ?, ?);", "sss", $username, $email, password_hash($password, PASSWORD_BCRYPT, ['cost' => $this->bcrypt]))[0], "Account created successfully!"];
 			}
 			return [false, "There was an error trying to create your account."];
