@@ -47,12 +47,12 @@ module.exports = class mongo4me {
             };
         });
     }
-    async update(database, collection, where, values) {
+    async update(database, collection, where, values, options={}) {
         this.connection = await this.database.connect();
         database = this.connection.db(database);
         collection = database.collection(collection);
-        let fields = await collection.updateOne(where, {$set: values});
-        let count = fields.modifiedCount;
+        let fields = await collection.updateOne(where, values, options);
+        let count = fields.modifiedCount || fields.upsertedCount;
         return new Promise((res) => {
             try {
                 count ? res([true, "Update operation was completed sucessfully"]) : res([false, "Couldn't complete update operation."]);

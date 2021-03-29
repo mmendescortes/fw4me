@@ -49,36 +49,34 @@ module.exports = class mongo4auth {
     signup(username, password, email) {
         let database = this.database;
         return new Promise((res) => {
-            this.database.select(this.field.database, this.field.collection, {
+            this.database.update(this.field.database, this.field.collection, {
                 $or: [{
                     "username": username
                 }, {
-                    "password": username
+                    "email": email
                 }]
-            }).then((result) => {
-                if (!result[0]) {
-                    this.database.insert(this.field.database, this.field.collection, [{
-                        "username": username,
-                        "email": email,
-                        "password": bcrypt.hashSync(password, this.bcrypt)
-                    }]).then((result) => {
-                        result[0] ? res([true, "Account created successfully!"], database.close()) : res([false, "There was an error trying to create your account."], database.close());
-                    });
-                } else {
-                    bcrypt.hashSync(password, this.bcrypt)
-                    res([false, "There was an error trying to create your account."], database.close());
+            }, {
+                $setOnInsert: {
+                  "username": username,
+                  "email": email,
+                  "password": bcrypt.hashSync(password, this.bcrypt)
                 }
+            }, {upsert: true}).then((result) => {
+                result[0] ? res([true, "Account was created sucessfully!"]) : res([false, "There was an error trying to create your account."]);
+                database.close();
             });
         });
     }
-
+    
     password(id, password) {
         let database = this.database;
         return new Promise((res) => {
             this.database.update(this.field.database, this.field.collection, {
                 "_id": ObjectId(id)
             }, {
-                "password": bcrypt.hashSync(password, this.bcrypt)
+                $set: {
+                    "password": bcrypt.hashSync(password, this.bcrypt)
+                }
             }).then((result) => {
                 result[0] ? res([true, "Password was changed sucessfully!"]) : res([false, "There was an error trying to change the password."]);
                 database.close();
@@ -92,7 +90,9 @@ module.exports = class mongo4auth {
             this.database.update(this.field.database, this.field.collection, {
                 "_id": ObjectId(id)
             }, {
-                "email": email
+                $set: {
+                    "email": email
+                }
             }).then((result) => {
                 result[0] ? res([true, "Email was changed sucessfully!"]) : res([false, "There was an error trying to change the email."]);
                 database.close();
