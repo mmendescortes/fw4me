@@ -4,10 +4,10 @@ class auth4me {
 		$this->provider = $provider;
 	}
 	function signin($username, $password){
-		return $this->provider->signin($username, $password);
+		return $this->provider->signin(strtolower($username), $password);
 	}
 	function signup($username, $password, $email=false){
-		return $email ? $this->provider->signup($username, $password, $email) : $this->provider->signup($username, $password, $username . "@example.com");
+		return $email ? $this->provider->signup(strtolower($username), $password, strtolower($email)) : $this->provider->signup(strtolower($username), $password, strtolower($username) . "@example.com");
 	}
 	function signout(){
 	}
@@ -15,7 +15,7 @@ class auth4me {
 		return $this->provider->password($id, $password);
 	}
 	function email($id, $email){
-		return $this->provider->email($id, $email);
+		return $this->provider->email($id, strtolower($email));
 	}
 };
 ?>

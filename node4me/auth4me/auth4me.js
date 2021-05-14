@@ -3,10 +3,10 @@ module.exports = class auth4me {
 		this.provider = provider;
 	}
 	signin(username, password){
-		return this.provider.signin(username, password);
+		return this.provider.signin(username.toLowerCase(), password);
 	}
 	signup(username, password, email=false){
-		return email ? this.provider.signup(username, password, email) : this.provider.signup(username, password, username + "@example.com");
+		return email ? this.provider.signup(username.toLowerCase(), password, email.toLowerCase()) : this.provider.signup(username.toLowerCase(), password, username.toLowerCase() + "@example.com");
 	}
 	signout(){
 	}
