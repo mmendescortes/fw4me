@@ -6,15 +6,17 @@ module.exports = class sql4me {
             this.database = mysql.createConnection({
                 host: hostname,
                 user: username,
-                password: password
+                password: password,
+                supportBigNumbers: true,
+                bigNumberStrings: true
             });
         } catch(err) {
-            console.err("Couldn't create connection.");
+            console.err("SQL4ME ERROR: Couldn't create connection.");
             require("process").exit();
         }
         this.database.connect((err) => {
             if(err) {
-                console.error("Couldn't create connection.");
+                console.error("SQL4ME ERROR: Couldn't create connection.");
                 require("process").exit();
             }
         });
@@ -24,7 +26,7 @@ module.exports = class sql4me {
         return new Promise((res) => {
             this.database.query(query, bind, function(err, fields) {
                 if(err) {
-                    console.error("Couldn't complete select query.");
+                    console.error("SQL4ME ERROR: Couldn't complete select query.");
                     require("process").exit();
                 } else {
                     fields.length ? res([true, fields]) : res([false, "No results for your query."]);
@@ -37,7 +39,7 @@ module.exports = class sql4me {
         return new Promise((res) => {
             this.database.query(query, bind, function(err, fields) {
                 if(err) {
-                    console.error("Couldn't complete operation.");
+                    console.error("SQL4ME ERROR: Couldn't complete operation.");
                     require("process").exit();
                 } else {
                     res(fields.affectedRows >= 1);
@@ -60,7 +62,7 @@ module.exports = class sql4me {
     select_db(field_database) {
         this.database.changeUser({database: field_database}, function(err) {
             if(err) {
-                console.error("Fail on changing database!");
+                console.error("SQL4ME ERROR: Fail on changing database!");
                 require("process").exit();
             }
         });
