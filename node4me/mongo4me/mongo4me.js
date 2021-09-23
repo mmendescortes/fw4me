@@ -8,7 +8,7 @@ module.exports = class mongo4me {
                 useUnifiedTopology: true
             });
         } catch(err) {
-            console.err("Couldn't create connection.");
+            console.error("Couldn't create connection.");
             require("process").exit();
         }
     }
