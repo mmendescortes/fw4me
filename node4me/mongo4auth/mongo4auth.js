@@ -20,8 +20,7 @@ module.exports = class mongo4auth {
         }
     }
 
-    schema(id = "id", username = "username", password = "password", email = "email", collection = "users", database = "auth4me") {
-        this.field.id = id;
+    schema(username = "username", password = "password", email = "email", collection = "users", database = "auth4me") {
         this.field.username = username;
         this.field.password = password;
         this.field.email = email;
